@@ -10,6 +10,9 @@ describe('Karaoke App', () => {
   const { initialState, types } = constants;
   const store = createStore(rootReducer, initialState);
 
+
+
+
   describe('lyricChangeReducer', () => {
     it('Should accept and return initial state.', () => {
       expect(lyricChangeReducer(initialState.songsById, { type: null })).toEqual(initialState.songsById);
@@ -22,7 +25,21 @@ describe('Karaoke App', () => {
     it('Should restart song', () => {
       expect(lyricChangeReducer(initialState.songsById, actions.restartSong(1))[1].arrayPosition).toEqual(0);
     });
+
+    it('Should update state when API lyrics are being requested.', () => {
+      const action = actions.requestSong('crocodile rock');
+      const newStateEntry = {
+        isFetching: true,
+        title: action.title,
+        songId: action.songId,
+      };
+      expect(lyricChangeReducer(initialState.songsById, action)[action.songId])
+      .toEqual(newStateEntry);
+    });
   });
+
+
+
 
   describe('songChangeReducer', () => {
     it('Should accept and return initial state.', () => {
@@ -33,6 +50,9 @@ describe('Karaoke App', () => {
       expect(songChangeReducer(initialState.currentSongId, actions.changeSong(2))).toEqual(2);
     });
   });
+
+
+
 
   describe('rootReducer', () => {
     it('Should accept and return initial state.', () => {
